@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PDF n-up</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="hello_first_fragment">PDF n-up</string>
+    <string name="generate_pdf">Generate PDF</string>
+    <string name="first_fragment_title">PDF n-up</string>
+    <string name="number_of_rows">Number of rows:</string>
+    <string name="number_of_columns">Number of columns:</string>
+</resources>
