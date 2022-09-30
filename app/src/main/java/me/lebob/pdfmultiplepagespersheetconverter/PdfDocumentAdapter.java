@@ -21,10 +21,12 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
 
     Context context;
     FileInputStream path;
+    String fileName;
 
-    public PdfDocumentAdapter(Context context, FileInputStream path){
+    public PdfDocumentAdapter(Context context, FileInputStream path, String fileName){
         this.context = context;
         this.path = path;
+        this.fileName=fileName;
     }
     @Override
     public void onLayout(PrintAttributes oldAttributes, PrintAttributes printAttributes1, CancellationSignal cancellationSignal, LayoutResultCallback layoutResultCallback, Bundle extras) {
@@ -33,7 +35,7 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
 
         else
         {
-            PrintDocumentInfo.Builder builder = new PrintDocumentInfo.Builder("file name");
+            PrintDocumentInfo.Builder builder = new PrintDocumentInfo.Builder(fileName);
             builder.setContentType(PrintDocumentInfo.CONTENT_TYPE_DOCUMENT)
                     .setPageCount(PrintDocumentInfo.PAGE_COUNT_UNKNOWN)
                     .build();
@@ -61,7 +63,7 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
             }
         } catch (Exception e) {
             writeResultCallback.onWriteFailed(e.getMessage());
-            Log.e("Harshita",e.getMessage());
+            Log.e("PDF N-Up",e.getMessage());
             e.printStackTrace();
         }
         finally {
@@ -70,7 +72,7 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
                 in.close();
                 out.close();
             }catch (IOException ex){
-                Log.e("Harshita", ""+ex.getMessage());
+                Log.e("PDF N-Up", ""+ex.getMessage());
             }
         }
     }

@@ -3,6 +3,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file(System.getenv("ANDROID_RELEASE_STORE_FILE"))
+            storePassword System.getenv("ANDROID_STORE_PASSWORD")
+            keyPassword System.getenv("ANDROID_KEY_PASSWORD")
+            keyAlias System.getenv("ANDROID_KEY_ALIAS")
+        }
+    }
     compileSdk 32
 
 
@@ -32,7 +40,6 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

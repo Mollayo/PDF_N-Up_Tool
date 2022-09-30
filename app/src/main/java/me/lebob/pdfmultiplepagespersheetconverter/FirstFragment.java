@@ -1,22 +1,29 @@
 package me.lebob.pdfmultiplepagespersheetconverter;
 
 
-import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
+import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import me.lebob.pdfmultiplepagespersheetconverter.databinding.FragmentFirstBinding;
 import com.itextpdf.kernel.geom.AffineTransform;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
@@ -27,14 +34,11 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.xobject.PdfFormXObject;
 
-import android.print.PrintAttributes;
-import android.print.PrintDocumentAdapter;
-import android.print.PrintManager;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
+
+import me.lebob.pdfmultiplepagespersheetconverter.databinding.FragmentFirstBinding;
 
 public class FirstFragment extends Fragment {
 
@@ -56,6 +60,20 @@ public class FirstFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == Activity.RESULT_OK) {
+                            // There are no request codes
+                            Intent data = result.getData();
+                            generatePDF(data);
+                        }
+                    }
+                });
+
         binding.numberOfColumns.setText("2");
         binding.numberOfRows.setText("3");
         binding.generatePdf.setOnClickListener(new View.OnClickListener() {
@@ -63,8 +81,9 @@ public class FirstFragment extends Fragment {
             public void onClick(View view) {
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("application/pdf");
-                startActivityForResult(intent, SELECT_PDF_REQUEST_CODE);
+                //startActivityForResult(intent, SELECT_PDF_REQUEST_CODE);
                 //startActivityForResult(Intent.createChooser(intent,"Choose a PDf file"), SELECT_PDF_REQUEST_CODE);
+                someActivityResultLauncher.launch(intent);
             }
         });
     }
@@ -75,23 +94,19 @@ public class FirstFragment extends Fragment {
         binding = null;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+    public void generatePDF(Intent data) {
         if (data == null)
             return;
 
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
-        }
         // get the new value from Intent data
         Uri uri = Uri.parse(data.getDataString());
 
         try {
             PdfReader reader = new PdfReader(getActivity().getContentResolver().openInputStream(uri));
             //File directory = Environment.getExternalStorageDirectory();
+            // The generated PDF is in the home directory of the app
             File directory = getActivity().getFilesDir();
-            String fileName="result.pdf";
+            String fileName = getFileName(getActivity(), uri);
             File file = new File(directory, fileName);
             FileOutputStream outputStream = new FileOutputStream(file);
             PdfWriter writer = new PdfWriter(outputStream);
@@ -101,8 +116,11 @@ public class FirstFragment extends Fragment {
             PdfDocument srcPdf = new PdfDocument(reader);
 
             // Opening a page from the existing PDF
+            boolean landscape=binding.landscape.isChecked();
             PageSize nUpPageSize = PageSize.A4;
-            PdfCanvas canvas = null;
+            if (landscape)
+                nUpPageSize = PageSize.A4.rotate();
+            PdfCanvas canvas;
 
             int nbRows=3;
             int nbColumns=2;
@@ -112,6 +130,7 @@ public class FirstFragment extends Fragment {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             int nbPagesPerSheet=nbRows*nbColumns;
             for (int pageIdx=0;pageIdx<srcPdf.getNumberOfPages();pageIdx=pageIdx+nbPagesPerSheet) {
                 // Add a new page
@@ -122,16 +141,16 @@ public class FirstFragment extends Fragment {
                 PdfPage origPage = srcPdf.getPage(pageIdx+1);
                 Rectangle orig = origPage.getPageSize();
 
-                float scale=nUpPageSize.getWidth()/orig.getWidth()/(float)nbColumns;
-                if (nUpPageSize.getHeight()/orig.getHeight()/(float)nbRows<scale)
-                    scale=nUpPageSize.getHeight()/orig.getHeight()/(float)nbRows;
-                AffineTransform transformationMatrix = AffineTransform.getScaleInstance(
-                        scale,
-                        scale);
+                float scaleWidth=nUpPageSize.getWidth()/(orig.getWidth()*(float)nbColumns);
+                float scaleHeight=nUpPageSize.getHeight()/(orig.getHeight()*(float)nbRows);
+                float scale=scaleWidth;
+                if (scale>scaleHeight)
+                    scale=scaleHeight;
+                AffineTransform transformationMatrix = AffineTransform.getScaleInstance(scale,scale);
                 canvas.concatMatrix(transformationMatrix);
 
                 // Get the next 8 pages from source file
-                PdfFormXObject pageCopy[]=new PdfFormXObject[nbRows*nbColumns];
+                PdfFormXObject[] pageCopy =new PdfFormXObject[nbRows*nbColumns];
                 for(int i=0;i<nbRows*nbColumns;i++)
                     pageCopy[i]=null;
                 for (int i=0;i<nbPagesPerSheet;i++) {
@@ -144,11 +163,18 @@ public class FirstFragment extends Fragment {
                 }
 
                 float rowHeight=nUpPageSize.getHeight()/nbRows/scale;
+                float origHeight=(orig.getHeight()*scale)/scale;
+                float offsetHeight=(rowHeight-origHeight)/2f;
+
                 float columnWidth=nUpPageSize.getWidth()/nbColumns/scale;
+                float origWidth=(orig.getWidth()*scale)/scale;
+                float offsetWidth=(columnWidth-origWidth)/2f;
                 for (int row=0;row<nbRows;row++)
                     for (int column=0;column<nbColumns;column++) {
                         if (pageCopy[row*nbColumns+column] != null)
-                            canvas.addXObjectAt(pageCopy[row*nbColumns+column], column * columnWidth, (nbRows-row-1) * rowHeight);
+                            canvas.addXObjectAt(pageCopy[row*nbColumns+column],
+                                    column * columnWidth + offsetWidth,
+                                    (nbRows-row-1) * rowHeight + offsetHeight);
                     }
             }
 
@@ -157,21 +183,33 @@ public class FirstFragment extends Fragment {
             srcPdf.close();
 
             // Printing the new PDF
-            printPDF(fileName);
-        } catch (IOException e) {
+            printPDF(fileName,landscape);
+
+            // Delete the file
+            File fdelete = new File(getActivity().getFilesDir(), fileName);
+            if (fdelete.exists())
+                fdelete.delete();
+
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error in opening and reading the PDF file", Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
     }
 
-    private void printPDF(String fileName){
+    private void printPDF(String fileName,boolean landscape){
         PrintManager printManager=(PrintManager) getContext().getSystemService(Context.PRINT_SERVICE);
         try
         {
             File directory = getActivity().getFilesDir();
             File file = new File(directory, fileName);
             FileInputStream inputStream = new FileInputStream(file);
-            PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(getContext(), inputStream);
-            printManager.print("Document", printAdapter,new PrintAttributes.Builder().build());
+            PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(getContext(), inputStream, fileName);
+            PrintAttributes attrib = new PrintAttributes.Builder().build();
+            if (landscape)
+                attrib = new PrintAttributes.Builder()
+                    .setMediaSize(PrintAttributes.MediaSize.UNKNOWN_LANDSCAPE)
+                    . build();
+            printManager.print(fileName, printAdapter, attrib);
         }
         catch (Exception e)
         {
@@ -179,4 +217,30 @@ public class FirstFragment extends Fragment {
         }
     }
 
+    @SuppressLint("Range")
+    private static String getFileName(Context context, Uri uri) {
+        String result = null;
+        if (uri.getScheme().equals("content")) {
+            Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getPath();
+            int cut = result.lastIndexOf(File.separator);
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+        }
+        return result;
+    }
 }

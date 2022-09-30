@@ -8,4 +8,7 @@
     <string name="first_fragment_title">PDF n-up</string>
     <string name="number_of_rows">Number of rows:</string>
     <string name="number_of_columns">Number of columns:</string>
+    <string name="portrait">Portrait</string>
+    <string name="landscape">Landscape</string>
+    <string name="page_orientation">Page orientation:</string>
 </resources>

@@ -35,10 +35,43 @@
         android:autofillHints="2"
         android:inputType="number"/>
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/page_orientation"/>
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_above="@+id/view_below" >
+
+        <RadioButton
+            android:id="@+id/portrait"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/portrait" />
+
+        <RadioButton
+            android:id="@+id/landscape"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="@string/landscape" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/generate_pdf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/purple_700"
+        android:textColor="#FFFFFF"
         android:text="@string/generate_pdf" />
+
+
+
 </androidx.appcompat.widget.LinearLayoutCompat>
