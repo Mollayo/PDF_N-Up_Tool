@@ -43,6 +43,7 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
         }
     }
 
+
     @Override
     public void onWrite(PageRange[] pages, ParcelFileDescriptor parcelFileDescriptor, CancellationSignal cancellationSignal, WriteResultCallback writeResultCallback) {
         InputStream in = null;
