@@ -12,6 +12,10 @@ import android.print.PrintAttributes;
 import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.provider.OpenableColumns;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +49,7 @@ public class FirstFragment extends Fragment {
     private static final int SELECT_PDF_REQUEST_CODE=200;
 
     private FragmentFirstBinding binding;
+    private int mIntMin=1, mIntMax=100;
 
     @Override
     public View onCreateView(
@@ -74,8 +79,63 @@ public class FirstFragment extends Fragment {
                     }
                 });
 
+        // Define a filter for the EditText (nb of columns and nb of rows)
+        InputFilter intFilter = new InputFilter() {
+            @Override
+            public CharSequence filter (CharSequence source , int start , int end , Spanned dest ,int dstart , int dend) {
+                try {
+                    int input = Integer. parseInt (dest.toString() + source.toString()) ;
+                    if (isInRange( mIntMin , mIntMax , input))
+                        return null;
+                } catch (NumberFormatException e) {
+                    e.printStackTrace() ;
+                }
+                return "" ;
+            }
+            private boolean isInRange ( int a , int b , int c) {
+                return b > a ? c >= a && c <= b : c >= b && c <= a ;
+            }
+        };
         binding.numberOfColumns.setText("2");
+        binding.numberOfColumns.setFilters(new InputFilter[]{intFilter});
+        binding.numberOfColumns.addTextChangedListener(new TextWatcher()  {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (binding.numberOfColumns.getText().toString().length() <= 0) {
+                    binding.numberOfColumns.setError("Enter a value between 1 and 100");
+                    binding.generatePdf.setEnabled(false);
+                } else {
+                    binding.numberOfColumns.setError(null);
+                    binding.generatePdf.setEnabled(true);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+        });
         binding.numberOfRows.setText("3");
+        binding.numberOfRows.setFilters(new InputFilter[]{intFilter});
+        binding.numberOfRows.addTextChangedListener(new TextWatcher()  {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+                if (binding.numberOfRows.getText().toString().length() <= 0) {
+                    binding.numberOfRows.setError("Enter a value between 1 and 100");
+                    binding.generatePdf.setEnabled(false);
+                } else {
+                    binding.numberOfRows.setError(null);
+                    binding.generatePdf.setEnabled(true);
+                }
+            }
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+        });
         binding.generatePdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
