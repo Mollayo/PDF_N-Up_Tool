@@ -62,7 +62,7 @@ public class FirstFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
-        ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+        ActivityResultLauncher<Intent> generatePDFActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK) {
@@ -134,9 +134,7 @@ public class FirstFragment extends Fragment {
         binding.generatePdf.setOnClickListener(view1 -> {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("application/pdf");
-            //startActivityForResult(intent, SELECT_PDF_REQUEST_CODE);
-            //startActivityForResult(Intent.createChooser(intent,"Choose a PDf file"), SELECT_PDF_REQUEST_CODE);
-            someActivityResultLauncher.launch(intent);
+            generatePDFActivityResultLauncher.launch(intent);
         });
     }
 
@@ -154,8 +152,7 @@ public class FirstFragment extends Fragment {
         Uri uri = Uri.parse(data.getDataString());
 
         try {
-            PdfReader reader = new PdfReader(getActivity().getContentResolver().openInputStream(uri));
-            //File directory = Environment.getExternalStorageDirectory();
+            PdfReader reader = new PdfReader(requireActivity().getContentResolver().openInputStream(uri));
             // The generated PDF is in the home directory of the app
             File directory = getActivity().getFilesDir();
             String fileName = getFileName(getActivity(), uri);
@@ -202,7 +199,7 @@ public class FirstFragment extends Fragment {
                 AffineTransform transformationMatrix = AffineTransform.getScaleInstance(scale,scale);
                 canvas.concatMatrix(transformationMatrix);
 
-                // Get the next 8 pages from source file
+                // Get the next pages from source file
                 PdfFormXObject[] pageCopy =new PdfFormXObject[nbRows*nbColumns];
                 for(int i=0;i<nbRows*nbColumns;i++)
                     pageCopy[i]=null;
@@ -238,7 +235,7 @@ public class FirstFragment extends Fragment {
             // Printing the new PDF
             printPDF(fileName,landscape);
 
-            // Delete the file
+            // Delete the new PDF file
             File fdelete = new File(getActivity().getFilesDir(), fileName);
             if (fdelete.exists())
                 fdelete.delete();
