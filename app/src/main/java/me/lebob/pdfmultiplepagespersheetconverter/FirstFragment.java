@@ -21,8 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -46,37 +44,31 @@ import me.lebob.pdfmultiplepagespersheetconverter.databinding.FragmentFirstBindi
 
 public class FirstFragment extends Fragment {
 
-    private static final int SELECT_PDF_REQUEST_CODE=200;
-
     private FragmentFirstBinding binding;
-    private int mIntMin=1, mIntMax=100;
     private boolean nbColumnsValid=true,nbRowsValid=true;
 
     @Override
     public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
+            @NonNull LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
 
         binding = FragmentFirstBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
         ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == Activity.RESULT_OK) {
-                            // There are no request codes
-                            Intent data = result.getData();
-                            generatePDF(data);
-                        }
+                result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        generatePDF(data);
                     }
                 });
 
@@ -86,15 +78,15 @@ public class FirstFragment extends Fragment {
             public CharSequence filter (CharSequence source , int start , int end , Spanned dest ,int dstart , int dend) {
                 try {
                     int input = Integer. parseInt (dest.toString() + source.toString()) ;
-                    if (isInRange( mIntMin , mIntMax , input))
+                    if (isInRange(input))
                         return null;
                 } catch (NumberFormatException e) {
                     e.printStackTrace() ;
                 }
                 return "" ;
             }
-            private boolean isInRange ( int a , int b , int c) {
-                return b > a ? c >= a && c <= b : c >= b && c <= a ;
+            private boolean isInRange(int c) {
+                return c >= 1 && c <= 100;
             }
         };
         binding.numberOfColumns.setText("2");
@@ -139,15 +131,12 @@ public class FirstFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
-        binding.generatePdf.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("application/pdf");
-                //startActivityForResult(intent, SELECT_PDF_REQUEST_CODE);
-                //startActivityForResult(Intent.createChooser(intent,"Choose a PDf file"), SELECT_PDF_REQUEST_CODE);
-                someActivityResultLauncher.launch(intent);
-            }
+        binding.generatePdf.setOnClickListener(view1 -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("application/pdf");
+            //startActivityForResult(intent, SELECT_PDF_REQUEST_CODE);
+            //startActivityForResult(Intent.createChooser(intent,"Choose a PDf file"), SELECT_PDF_REQUEST_CODE);
+            someActivityResultLauncher.launch(intent);
         });
     }
 

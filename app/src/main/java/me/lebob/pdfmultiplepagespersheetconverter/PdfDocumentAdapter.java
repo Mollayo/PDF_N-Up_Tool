@@ -10,7 +10,6 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintDocumentInfo;
 import android.util.Log;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -71,7 +70,9 @@ public class PdfDocumentAdapter extends PrintDocumentAdapter {
             try
             {
                 in.close();
-                out.close();
+                if (out != null) {
+                    out.close();
+                }
             }catch (IOException ex){
                 Log.e("PDF N-Up", ""+ex.getMessage());
             }
