@@ -50,6 +50,7 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private int mIntMin=1, mIntMax=100;
+    private boolean nbColumnsValid=true,nbRowsValid=true;
 
     @Override
     public View onCreateView(
@@ -106,11 +107,12 @@ public class FirstFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (binding.numberOfColumns.getText().toString().length() <= 0) {
                     binding.numberOfColumns.setError("Enter a value between 1 and 100");
-                    binding.generatePdf.setEnabled(false);
+                    nbColumnsValid=false;
                 } else {
                     binding.numberOfColumns.setError(null);
-                    binding.generatePdf.setEnabled(true);
+                    nbColumnsValid=true;
                 }
+                binding.generatePdf.setEnabled(nbColumnsValid&&nbRowsValid);
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -126,11 +128,12 @@ public class FirstFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if (binding.numberOfRows.getText().toString().length() <= 0) {
                     binding.numberOfRows.setError("Enter a value between 1 and 100");
-                    binding.generatePdf.setEnabled(false);
+                    nbRowsValid=false;
                 } else {
                     binding.numberOfRows.setError(null);
-                    binding.generatePdf.setEnabled(true);
+                    nbRowsValid=true;
                 }
+                binding.generatePdf.setEnabled(nbColumnsValid&&nbRowsValid);
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -172,14 +175,15 @@ public class FirstFragment extends Fragment {
             PdfWriter writer = new PdfWriter(outputStream);
 
             // Creating a PdfDocument objects
-            PdfDocument destpdf = new PdfDocument(writer);
             PdfDocument srcPdf = new PdfDocument(reader);
+            PdfDocument destpdf = new PdfDocument(writer);
 
             // Opening a page from the existing PDF
             boolean landscape=binding.landscape.isChecked();
-            PageSize nUpPageSize = PageSize.A4;
+            //PageSize nUpPageSize = PageSize.A4;
+            PageSize nUpPageSize = srcPdf.getDefaultPageSize();
             if (landscape)
-                nUpPageSize = PageSize.A4.rotate();
+                nUpPageSize = srcPdf.getDefaultPageSize().rotate();
             PdfCanvas canvas;
 
             int nbRows=3;
