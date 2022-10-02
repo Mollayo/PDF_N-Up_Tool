@@ -76,7 +76,7 @@ Your Consent
 
 By using the Application, you only consent to the local processing of your information.
 
-At any time, no User Provided Data (such as the PDF file) will be shared, processed and/or stored by third parties. User Provided Data cannot and will never be sold to any other third parties.
+At any time, no User Provided Data (such as the PDF files) will be shared, processed and/or stored by third parties. User Provided Data cannot and will never be sold to any other third parties.
 
 Contact Us
 ----------
