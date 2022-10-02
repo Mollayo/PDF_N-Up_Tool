@@ -65,7 +65,7 @@ We also advise you to regularly check for any Android OS update(s) that could be
 Changes
 -------
 
-This Privacy Policy may be updated from time to time for any reason. We will notify you of any changes to our Privacy Policy by posting the new Privacy Policy at [https://timetocount.antoineauger.fr/privacy.html](https://timetocount.antoineauger.fr/privacy.html) and update the "Last updated" date at the top of this Privacy Policy.
+This Privacy Policy may be updated from time to time for any reason. We will notify you of any changes to our Privacy Policy by posting the new Privacy Policy at https://github.com/Mollayo/PDF_N-Up_Tool/blob/master/Privacy%20Policy.md and update the "Last updated" date at the top of this Privacy Policy.
 
 Please be aware that, although we endeavor provide reasonable security for information we process and maintain, no security system can prevent all potential security breaches (e.g., a zero-day attack targeting mobile Operating System – OS).
 
