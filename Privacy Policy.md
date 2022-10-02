@@ -1,4 +1,4 @@
-     PDF N-Up - Privacy Policy  
+     PDF N-Up - Privacy Policy
 
 PRIVACY POLICY FOR MOBILE APPLICATION "PDF N-Up"
 =====================================================
