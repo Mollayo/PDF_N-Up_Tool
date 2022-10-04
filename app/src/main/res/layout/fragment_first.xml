@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,6 +12,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -46,6 +48,21 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:labelFor="@+id/number_of_rows"
+            android:text="@string/margin_in_mm" />
+
+        <EditText
+            android:id="@+id/margin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="0"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/page_orientation" />
 
         <RadioGroup
@@ -58,7 +75,6 @@
                 android:id="@+id/portrait"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:checked="true"
                 android:text="@string/portrait" />
 
@@ -66,19 +82,41 @@
                 android:id="@+id/landscape"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:checked="false"
                 android:text="@string/landscape" />
         </RadioGroup>
-
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/drawframe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/draw_frame"/>
         <Button
-            android:id="@+id/generate_pdf"
+            android:id="@+id/select_pdf"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/purple_700"
-            android:text="@string/generate_pdf"
+            android:text="@string/select_file"
             android:textColor="@color/white" />
-
+        <TextView
+            android:id="@+id/filename"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="" />
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""/>
+        <Button
+            android:id="@+id/print_pdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/purple_700"
+            android:text="@string/print"
+            android:enabled="false"
+            android:textColor="@color/white" />
     </LinearLayout>
-
 
 </androidx.appcompat.widget.LinearLayoutCompat>

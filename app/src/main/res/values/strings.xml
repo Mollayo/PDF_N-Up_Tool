@@ -1,14 +1,18 @@
 <resources>
-    <string name="app_name">PDF n-up</string>
+    <string name="app_name">PDF N-Up</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
 
-    <string name="hello_first_fragment">PDF n-up</string>
+    <string name="hello_first_fragment">PDF N-Up</string>
     <string name="generate_pdf">Generate PDF</string>
-    <string name="first_fragment_title">PDF n-up</string>
+    <string name="first_fragment_title">PDF N-Up</string>
     <string name="number_of_rows">Number of rows:</string>
     <string name="number_of_columns">Number of columns:</string>
     <string name="portrait">Portrait</string>
     <string name="landscape">Landscape</string>
     <string name="page_orientation">Page orientation:</string>
+    <string name="select_file">Select file</string>
+    <string name="print">Print</string>
+    <string name="margin_in_mm">Margin in mm.:</string>
+    <string name="draw_frame">Draw frame</string>
 </resources>

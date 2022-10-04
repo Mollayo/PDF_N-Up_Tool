@@ -58,4 +58,9 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
