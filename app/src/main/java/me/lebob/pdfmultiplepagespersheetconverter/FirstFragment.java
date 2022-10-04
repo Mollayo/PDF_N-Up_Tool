@@ -55,9 +55,10 @@ public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
     private boolean nbColumnsValid=true,nbRowsValid=true,marginValid=true;
-    private static final int EOF = -1;
-    private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+    // File name of the PDF to be used for the N-Up
     String fileName;
+    // Time stamp to differentiate the files (in case of multiple runs of the app)
+    String timeStamp;
 
     @Override
     public View onCreateView(
@@ -199,11 +200,12 @@ public class FirstFragment extends Fragment {
         if (fileName!=null)
         {
             File directory = requireActivity().getCacheDir();
-            File fdelete = new File(directory, fileName);
+            File fdelete = new File(directory, timeStamp+fileName);
             if (fdelete.exists())
                 fdelete.delete();
         }
         fileName=null;
+        timeStamp=null;
         super.onDestroyView();
         binding = null;
     }
@@ -211,9 +213,9 @@ public class FirstFragment extends Fragment {
     public void generatePDF() {
         try {
             File directory = getActivity().getCacheDir();
-            PdfReader reader = new PdfReader(new File(directory, fileName));
+            PdfReader reader = new PdfReader(new File(directory, timeStamp+fileName));
             // The generated PDF is in the home directory of the app
-            File file = new File(directory, "n-up-"+fileName);
+            File file = new File(directory, fileName);
             FileOutputStream outputStream = new FileOutputStream(file);
             PdfWriter writer = new PdfWriter(outputStream);
 
@@ -317,7 +319,7 @@ public class FirstFragment extends Fragment {
             printPDF(fileName,landscape);
 
             // Delete the new PDF file
-            File fdelete = new File(getActivity().getCacheDir(), "n-up-"+fileName);
+            File fdelete = new File(getActivity().getCacheDir(), fileName);
             if (fdelete.exists())
                 fdelete.delete();
 
@@ -340,7 +342,7 @@ public class FirstFragment extends Fragment {
         try
         {
             File directory = getActivity().getCacheDir();
-            File file = new File(directory, "n-up-"+fileName);
+            File file = new File(directory, fileName);
             FileInputStream inputStream = new FileInputStream(file);
             PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(getContext(), inputStream, fileName);
             PrintAttributes attrib = new PrintAttributes.Builder().build();
@@ -385,6 +387,8 @@ public class FirstFragment extends Fragment {
 
     private void copyPDF(Uri uri) {
         // Copy the file in the cache directory
+        final int EOF = -1;
+        final int DEFAULT_BUFFER_SIZE = 1024 * 4;
         try {
             fileName = getFileName(getActivity(), uri);
 
@@ -396,7 +400,9 @@ public class FirstFragment extends Fragment {
             srcPdf.close();
 
             inputStream = requireActivity().getContentResolver().openInputStream(uri);
-            File file = new File(requireActivity().getCacheDir(), fileName);
+            // Generate a timestamp to identify the file
+            timeStamp=String.valueOf(android.os.SystemClock.elapsedRealtime());
+            File file = new File(requireActivity().getCacheDir(), timeStamp+fileName);
             FileOutputStream outputStream = new FileOutputStream(file);
 
             long count = 0;
@@ -413,6 +419,7 @@ public class FirstFragment extends Fragment {
             Toast.makeText(getContext(), "Error opening and reading the PDF file", Toast.LENGTH_LONG).show();
             e.printStackTrace();
             fileName=null;
+            timeStamp=null;
             binding.filename.setText("");
         }
         setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
