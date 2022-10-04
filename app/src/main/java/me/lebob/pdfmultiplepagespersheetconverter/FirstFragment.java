@@ -415,6 +415,7 @@ public class FirstFragment extends Fragment {
             fileName=null;
             binding.filename.setText("");
         }
+        setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
     }
 
     private void onSharedIntent() {
