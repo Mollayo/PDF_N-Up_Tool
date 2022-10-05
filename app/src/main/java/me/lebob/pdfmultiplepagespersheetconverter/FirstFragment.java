@@ -50,7 +50,7 @@ public class FirstFragment extends Fragment {
     private boolean nbColumnsValid=true,nbRowsValid=true,marginValid=true;
     // File name of the PDF to be used for the N-Up
     String fileName;
-    // Time stamp to differentiate the files (in case of multiple runs of the app)
+    // Time stamp to differentiate the PDF files (in case of multiple runs of the app)
     String timeStamp;
 
     @Override
@@ -78,46 +78,26 @@ public class FirstFragment extends Fragment {
                     }
                 });
 
-        // Define a filter for the EditText (nb of columns and nb of rows)
-        InputFilter intNonNullFilter = new InputFilter() {
-            @Override
-            public CharSequence filter (CharSequence source , int start , int end , Spanned dest ,int dstart , int dend) {
-                int input = Integer. parseInt (dest.toString() + source.toString()) ;
-                if (isInRange(input))
-                    return null;
-                return "" ;
-            }
-            private boolean isInRange(int c) {
-                return c >= 1 && c <= 100;
-            }
-        };
-        InputFilter intFilter = new InputFilter() {
-            @Override
-            public CharSequence filter (CharSequence source , int start , int end , Spanned dest ,int dstart , int dend) {
-                int input = Integer. parseInt (dest.toString() + source.toString()) ;
-                if (isInRange(input))
-                    return null;
-                return "" ;
-            }
-            private boolean isInRange(int c) {
-                return c >= 0 && c <= 100;
-            }
-        };
         binding.numberOfColumns.setText("2");
-        binding.numberOfColumns.setFilters(new InputFilter[]{intNonNullFilter});
         binding.numberOfColumns.addTextChangedListener(new TextWatcher()  {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if (binding.numberOfColumns.getText().toString().length() <= 0) {
-                    binding.numberOfColumns.setError("Enter a value between 1 and 100");
-                    nbColumnsValid=false;
-                } else {
-                    binding.numberOfColumns.setError(null);
-                    nbColumnsValid=true;
+                try
+                {
+                    int val=Integer.parseInt(binding.numberOfColumns.getText().toString());
+                    nbColumnsValid=(val>=1 && val<=100);
                 }
+                catch (Exception e)
+                {
+                    nbColumnsValid=false;
+                }
+                if (nbColumnsValid)
+                    binding.numberOfColumns.setError(null);
+                else
+                    binding.numberOfColumns.setError("Enter a value between 1 and 100");
                 setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
             }
             @Override
@@ -125,40 +105,50 @@ public class FirstFragment extends Fragment {
             }
         });
         binding.numberOfRows.setText("3");
-        binding.numberOfRows.setFilters(new InputFilter[]{intNonNullFilter});
         binding.numberOfRows.addTextChangedListener(new TextWatcher()  {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if (binding.numberOfRows.getText().toString().length() <= 0) {
-                    binding.numberOfRows.setError("Enter a value between 1 and 100");
-                    nbRowsValid=false;
-                } else {
-                    binding.numberOfRows.setError(null);
-                    nbRowsValid=true;
+                try
+                {
+                    int val=Integer.parseInt(binding.numberOfRows.getText().toString());
+                    nbRowsValid=(val>=1 && val<=100);
                 }
+                catch (Exception e)
+                {
+                    nbRowsValid=false;
+                }
+                if (nbRowsValid)
+                    binding.numberOfRows.setError(null);
+                else
+                    binding.numberOfRows.setError("Enter a value between 1 and 100");
                 setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
             }
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
-        binding.margin.setFilters(new InputFilter[]{intFilter});
         binding.margin.addTextChangedListener(new TextWatcher()  {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
             @Override
             public void afterTextChanged(Editable editable) {
-                if (binding.margin.getText().toString().length() <= 0) {
-                    binding.margin.setError("Enter a value between 0 and 100");
-                    marginValid=false;
-                } else {
-                    binding.margin.setError(null);
-                    marginValid=true;
+                try
+                {
+                    int val=Integer.parseInt(binding.margin.getText().toString());
+                    marginValid=(val>=0 && val<=100);
                 }
+                catch (Exception e)
+                {
+                    marginValid=false;
+                }
+                if (marginValid)
+                    binding.margin.setError(null);
+                else
+                    binding.margin.setError("Enter a value between 0 and 100");
                 setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
             }
             @Override
