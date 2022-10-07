@@ -11,16 +11,15 @@ android {
             keyAlias System.getenv("ANDROID_KEY_ALIAS")
         }
     }
-    compileSdk 32
+    compileSdk 33
 
 
     defaultConfig {
         applicationId "me.lebob.pdfmultiplepagespersheetconverter"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,6 +36,7 @@ android {
     buildFeatures {
         viewBinding true
     }
+    namespace 'me.lebob.pdfmultiplepagespersheetconverter'
 }
 
 dependencies {

@@ -13,8 +13,6 @@ import android.print.PrintDocumentAdapter;
 import android.print.PrintManager;
 import android.provider.OpenableColumns;
 import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +22,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.itextpdf.kernel.colors.ColorConstants;
@@ -162,9 +161,7 @@ public class FirstFragment extends Fragment {
         });
 
         setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
-        binding.printPdf.setOnClickListener(view1 -> {
-            generatePDF();
-        });
+        binding.printPdf.setOnClickListener(view1 -> generatePDF());
         onSharedIntent();
     }
 
@@ -195,7 +192,7 @@ public class FirstFragment extends Fragment {
 
     public void generatePDF() {
         try {
-            File directory = getActivity().getCacheDir();
+            File directory = requireActivity().getCacheDir();
             PdfReader reader = new PdfReader(new File(directory, timeStamp+fileName));
             // The generated PDF is in the home directory of the app
             File file = new File(directory, fileName);
@@ -302,7 +299,7 @@ public class FirstFragment extends Fragment {
             printPDF(fileName,landscape);
 
             // Delete the new PDF file
-            File fdelete = new File(getActivity().getCacheDir(), fileName);
+            File fdelete = new File(requireActivity().getCacheDir(), fileName);
             if (fdelete.exists())
                 fdelete.delete();
 
@@ -312,19 +309,21 @@ public class FirstFragment extends Fragment {
         }
     }
 
-    private void selectPDF(Intent data)
+    private void selectPDF(@Nullable Intent data)
     {
-        // get the new value from Intent data
-        Uri uri = Uri.parse(data.getDataString());
-        // Copy the file in the cache directory
-        copyPDF(uri);
+        if (data!=null) {
+            // get the new value from Intent data
+            Uri uri = Uri.parse(data.getDataString());
+            // Copy the file in the cache directory
+            copyPDF(uri);
+        }
     }
 
     private void printPDF(String fileName,boolean landscape){
-        PrintManager printManager=(PrintManager) getContext().getSystemService(Context.PRINT_SERVICE);
+        PrintManager printManager=(PrintManager) requireContext().getSystemService(Context.PRINT_SERVICE);
         try
         {
-            File directory = getActivity().getCacheDir();
+            File directory = requireActivity().getCacheDir();
             File file = new File(directory, fileName);
             FileInputStream inputStream = new FileInputStream(file);
             PrintDocumentAdapter printAdapter = new PdfDocumentAdapter(getContext(), inputStream, fileName);
@@ -388,13 +387,12 @@ public class FirstFragment extends Fragment {
             File file = new File(requireActivity().getCacheDir(), timeStamp+fileName);
             FileOutputStream outputStream = new FileOutputStream(file);
 
-            long count = 0;
             int n;
             byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
             while (EOF != (n = inputStream.read(buffer))) {
                 outputStream.write(buffer, 0, n);
-                count += n;
             }
+            inputStream.close();
             outputStream.close();
             binding.filename.setText(fileName);
             setPrintButtonState(nbColumnsValid&&nbRowsValid&&marginValid&&fileName!=null);
@@ -409,7 +407,7 @@ public class FirstFragment extends Fragment {
     }
 
     private void onSharedIntent() {
-        Intent receivedIntent = getActivity().getIntent();
+        Intent receivedIntent = requireActivity().getIntent();
         String receivedAction = receivedIntent.getAction();
         String receivedType = receivedIntent.getType();
 
