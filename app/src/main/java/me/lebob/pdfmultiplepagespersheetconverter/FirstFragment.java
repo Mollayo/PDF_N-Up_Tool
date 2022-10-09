@@ -129,6 +129,7 @@ public class FirstFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
+        binding.margin.setText("0");
         binding.margin.addTextChangedListener(new TextWatcher()  {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {

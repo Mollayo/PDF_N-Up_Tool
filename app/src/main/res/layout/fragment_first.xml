@@ -15,52 +15,66 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="5"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/number_of_rows"
+                android:text="@string/pages_per_sheet" />
+            <EditText
+                android:id="@+id/number_of_rows"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:autofillHints="6"
+                android:textAlignment="center"
+                android:inputType="number" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:labelFor="@+id/number_of_columns"
+                android:text="@string/by" />
+            <EditText
+                android:id="@+id/number_of_columns"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:autofillHints="2"
+                android:textAlignment="center"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/number_of_rows"
+                    android:text="@string/margin_in_mm" />
+
+            <EditText
+                android:id="@+id/margin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:inputType="number"
+                android:textAlignment="center" />
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/number_of_rows"
-            android:text="@string/number_of_rows" />
-
-        <EditText
-            android:id="@+id/number_of_rows"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:autofillHints="6"
-            android:inputType="number" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/number_of_columns"
-            android:text="@string/number_of_columns" />
-
-        <EditText
-            android:id="@+id/number_of_columns"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autofillHints="2"
-            android:inputType="number" />
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/number_of_rows"
-            android:text="@string/margin_in_mm" />
-
-        <EditText
-            android:id="@+id/margin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="0"
-            android:inputType="number" />
-
-        <TextView
-            android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/page_orientation" />
@@ -85,12 +99,16 @@
                 android:checked="false"
                 android:text="@string/landscape" />
         </RadioGroup>
+
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/drawframe"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:text="@string/draw_frame"/>
+            android:text="@string/print_page_border"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <Button
             android:id="@+id/select_pdf"
             android:layout_width="match_parent"
@@ -103,9 +121,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="18sp"
-            android:text="" />
+            android:text=""/>
         <TextView
-            android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""/>
