@@ -1,139 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:isScrollContainer="true"
-    android:orientation="horizontal"
-    tools:context=".FirstFragment">
-
+    android:gravity="center">
     <LinearLayout
-        android:layout_width="wrap_content"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical">
+        android:isScrollContainer="true"
+        android:orientation="horizontal"
+        tools:context=".FirstFragment">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="5"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:labelFor="@+id/number_of_rows"
                 android:text="@string/pages_per_sheet" />
-            <EditText
-                android:id="@+id/number_of_rows"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:autofillHints="6"
-                android:textAlignment="center"
-                android:inputType="number" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:labelFor="@+id/number_of_columns"
-                android:text="@string/by" />
-            <EditText
-                android:id="@+id/number_of_columns"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:autofillHints="2"
-                android:textAlignment="center"
-                android:inputType="number" />
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/number_of_rows"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:autofillHints="6"
+                    android:textAlignment="center"
+                    android:inputType="number" />
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
-                    android:labelFor="@+id/number_of_rows"
-                    android:text="@string/margin_in_mm" />
+                    android:labelFor="@+id/number_of_columns"
+                    android:text="@string/by"
+                    android:textAlignment="center"/>
+                <EditText
+                    android:id="@+id/number_of_columns"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="2"
+                    android:textAlignment="center"
+                    android:inputType="number" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/margin"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="1"
-                android:inputType="number"
-                android:textAlignment="center" />
-        </LinearLayout>
+                android:gravity="center"
+                android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1.5"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@+id/number_of_rows"
+                        android:text="@string/margin_in_mm" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/page_orientation" />
+                <EditText
+                    android:id="@+id/margin"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:textAlignment="center" />
+            </LinearLayout>
 
-        <RadioGroup
-            android:id="@+id/radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/portrait"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="@string/portrait" />
+                android:text="@string/page_orientation" />
 
-            <RadioButton
-                android:id="@+id/landscape"
-                android:layout_width="wrap_content"
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/portrait"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/portrait" />
+
+                <RadioButton
+                    android:id="@+id/landscape"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:text="@string/landscape" />
+            </RadioGroup>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/drawframe"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="@string/landscape" />
-        </RadioGroup>
+                android:text="@string/print_page_border"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <Button
+                android:id="@+id/select_pdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_700"
+                android:text="@string/select_file"
+                android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/filename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text=""/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""/>
+            <Button
+                android:id="@+id/print_pdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/purple_700"
+                android:text="@string/print"
+                android:enabled="false"
+                android:textColor="@color/white" />
+        </LinearLayout>
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/drawframe"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/print_page_border"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/select_pdf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/purple_700"
-            android:text="@string/select_file"
-            android:textColor="@color/white" />
-        <TextView
-            android:id="@+id/filename"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text=""/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""/>
-        <Button
-            android:id="@+id/print_pdf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/purple_700"
-            android:text="@string/print"
-            android:enabled="false"
-            android:textColor="@color/white" />
     </LinearLayout>
-
-</androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>
